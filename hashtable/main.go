@@ -42,64 +42,11 @@ func (h *HashMap) String() string {
 	return output.String()
 }
 
-func (h *HashMap) Insert(key string, value string) {
-	index := getIndex(key)
+//func (h *HashMap) Insert(key string, value string) {
 
-	if h.Data[index] == nil {
-		// index is empty, go ahead and insert
-		h.Data[index] = &Node{key: key, value: value}
-	} else {
-		// there is a collision, get into linked-list mode
-		starting_node := h.Data[index]
-		for ; starting_node.next != nil; starting_node = starting_node.next {
-			if starting_node.key == key {
-				// the key exists, its a modifying operation
-				starting_node.value = value
-				return
-			}
-		}
-		starting_node.next = &Node{key: key, value: value}
-	}
-}
+//func (h *HashMap) Get(key string) (string, bool) {
 
-func (h *HashMap) Get(key string) (string, bool) {
-	index := getIndex(key)
-	if h.Data[index] != nil {
-		// key is on this index, but might be somewhere in linked list
-		starting_node := h.Data[index]
-		for ; ; starting_node = starting_node.next {
-			if starting_node.key == key {
-				// key matched
-				return starting_node.value, true
-			}
-
-			if starting_node.next == nil {
-				break
-			}
-		}
-	}
-
-	// key does not exists
-	return "", false
-}
-
-func hash(key string) (hash uint8) {
-	// a jenkins one-at-a-time-hash
-	// refer https://en.wikipedia.org/wiki/Jenkins_hash_function
-
-	hash = 0
-	for _, ch := range key {
-		hash += uint8(ch)
-		hash += hash << 10
-		hash ^= hash >> 6
-	}
-
-	hash += hash << 3
-	hash ^= hash >> 11
-	hash += hash << 15
-
-	return
-}
+//func hash(key string) (hash uint8) {
 
 func getIndex(key string) (index int) {
 	return int(hash(key)) % MAP_SIZE

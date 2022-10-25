@@ -16,50 +16,13 @@ func (b *bst) reset() {
 	b.root = nil
 }
 
-func (b *bst) insert(value int) {
-	b.insertRec(b.root, value)
-}
+//func (b *bst) insert(value int) {
 
-func (b *bst) insertRec(node *bstnode, value int) *bstnode {
-	if b.root == nil {
-		b.root = &bstnode{
-			value: value,
-		}
-		return b.root
-	}
+//func (b *bst) insertRec(node *bstnode, value int) *bstnode {
 
-	if node == nil {
-		return &bstnode{value: value}
-	}
-	if value <= node.value {
-		node.left = b.insertRec(node.left, value)
-	}
-	if value > node.value {
-		node.right = b.insertRec(node.right, value)
-	}
-	return node
-}
+//func (b *bst) find(value int) error {
 
-func (b *bst) find(value int) error {
-	node := b.findRec(b.root, value)
-	if node == nil {
-		return fmt.Errorf("Value: %d not found in tree", value)
-	}
-	return nil
-}
-
-func (b *bst) findRec(node *bstnode, value int) *bstnode {
-	if node == nil {
-		return nil
-	}
-	if node.value == value {
-		return b.root
-	}
-	if value < node.value {
-		return b.findRec(node.left, value)
-	}
-	return b.findRec(node.right, value)
-}
+//func (b *bst) findRec(node *bstnode, value int) *bstnode {
 
 func (b *bst) inorder() {
 	b.inorderRec(b.root)
