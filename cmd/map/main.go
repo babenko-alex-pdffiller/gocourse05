@@ -34,7 +34,10 @@ func main() {
 	persons := map[string]person{}
 	persons["John"] = person{age: 29}
 	fmt.Printf("%v\n", persons)
-	delete(persons, "John")
+	if _, ok := persons["John"]; ok {
+		delete(persons, "John")
+		fmt.Printf("%v\n", persons)
+	}
 
 	numbers := map[int][5]int{}
 	numbers[1] = [5]int{1: 789}
@@ -43,6 +46,5 @@ func main() {
 
 	// exercises
 	// 1. Створити словник англійських слів з їх українським перекладом та знайти переклад певного слова.
-	// 2. Створити програму, яка буде зберігати книжкові квитки в бібліотеці та знаходити, чи є певна книга наявна.
 	// 3. Створити програму, яка буде зберігати дані про працівників певної компанії, додапє і видаляє працівників
 }
