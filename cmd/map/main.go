@@ -41,23 +41,8 @@ func main() {
 	fmt.Printf("%v\n", numbers)
 	delete(numbers, 1)
 
-	// exercise // writing
-	// myFirstMap := map[string]string{
-	// 	`mom name`: `Name`,
-	// 	`dad name`: `Name`,
-	// 	`pet name`: `Name`,
-	// }
-	// fmt.Printf("%T, %v\n", myFirstMap, myFirstMap)
-
-	// exercise  // read it
-	// pm1_1 := map[[2]int]int{{1, 2}: 1972, {3, 4}: 2009}
-	// pm1_2 := map[[2]int]int{[2]int{1, 2}: 1972, [2]int{3, 4}: 2009}
-	// pm2 := map[bool]string{} // why is bad?
-
-	// exercise: update age
-	// relatives := make(map[string]int, 3)
-	// relatives[`mom name`] = 50
-	// relatives[`dad name`] = 60
-	// relatives[`pet name`] = 10
-	// fmt.Printf("%T, %v\n", relatives, relatives)
+	// exercises
+	// 1. Створити словник англійських слів з їх українським перекладом та знайти переклад певного слова.
+	// 2. Створити програму, яка буде зберігати книжкові квитки в бібліотеці та знаходити, чи є певна книга наявна.
+	// 3. Створити програму, яка буде зберігати дані про працівників певної компанії, додапє і видаляє працівників
 }
