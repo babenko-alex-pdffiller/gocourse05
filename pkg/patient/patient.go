@@ -20,7 +20,7 @@ func (p VIPPatient) GetPatientDetails() string {
 }
 
 func (p VIPPatient) PrintVisits() {
-	fmt.Printf("%s visits:\n- %s;", p.Name, strings.Join(p.Visits, ";\n- "))
+	fmt.Printf("%s visits:\n- %s;\n", p.Name, strings.Join(p.Visits, ";\n- "))
 }
 
 // Patient - структура, що представляє пацієнта

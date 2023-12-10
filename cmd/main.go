@@ -31,11 +31,14 @@ func main() {
 
 	// Інтерфейси як Контракти
 	if err := ProcessPatient(p1); err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	if err := ProcessPatient(p2); err != nil {
 		log.Println(err)
 	}
+
+	// Panic/recover
+	ProcessClinic(c1)
 
 	logger.AddClinic(`some clinic`, *c1)
 	fmt.Printf(`%#v`, logger.Clinics())

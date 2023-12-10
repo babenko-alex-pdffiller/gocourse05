@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gocourse05/pkg/clinic"
 	"gocourse05/pkg/patient"
+	"log"
 )
 
 type Visitor interface {
@@ -38,6 +39,7 @@ func PrintDetails(objects ...any) {
 	}
 }
 
+// ProcessPatient uses contracts
 func ProcessPatient(object any) error {
 	if visitor, ok := object.(Visitor); !ok {
 		return fmt.Errorf(`object doesn't implement Visitor interface, it's %T`, object)
@@ -46,4 +48,18 @@ func ProcessPatient(object any) error {
 	}
 
 	return nil
+}
+
+// ProcessClinic doesn't use contracts
+func ProcessClinic(object any) {
+	defer func() {
+		if err := recover(); err != nil {
+			log.Println(fmt.Errorf(`RECOVERED: object doesn't implement Visitor interface: %s`, err))
+		}
+	}()
+
+	c := object.(clinic.Clinic)
+	for _, p := range c.Patients() {
+		fmt.Printf("%v\n", p)
+	}
 }
