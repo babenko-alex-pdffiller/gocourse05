@@ -1,3 +1,3 @@
-module github.com/prjctr-golang-beginning/gocourse05
+module gocourse05
 
-go 1.20
+go 1.21
