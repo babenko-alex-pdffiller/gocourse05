@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
+	"gocourse05/core/city"
+	_ "gocourse05/core/city"
 	. "gocourse05/core/funcs"
-	_ "gocourse05/core/log"
-	logger "gocourse05/core/log"
 	"gocourse05/pkg/clinic"
 	"gocourse05/pkg/patient"
 	"log"
@@ -26,10 +26,9 @@ func main() {
 	// Поліморфізм з Інтерфейсами
 	PerformHealthCheck(c1, p1.GetId())
 
-	// Type Assertions та Type Switches
+	// Інтерфейси як Контракти
 	PrintDetails(p1, p2, c1)
 
-	// Інтерфейси як Контракти
 	if err := ProcessPatient(p1); err != nil {
 		log.Println(err)
 	}
@@ -40,6 +39,6 @@ func main() {
 	// Panic/recover
 	ProcessClinic(c1)
 
-	logger.AddClinic(`some clinic`, *c1)
-	fmt.Printf(`%#v`, logger.Clinics())
+	city.SomeCity.AddClinic(`some clinic`, *c1)
+	fmt.Printf(`%#v`, city.SomeCity.Clinics())
 }
