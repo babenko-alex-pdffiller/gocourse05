@@ -6,31 +6,41 @@ import (
 	"math/rand/v2"
 )
 
-type ID interface {
-	GetId() int
+type IDer interface {
+	ID() int
 }
 
-type Metadata interface {
-	GetMetaData() string
+type Metadater interface {
+	MetaData() string
 }
 
 func main() {
-	camerasList := buildCamerasList()
+	cameras := buildCameras()
 
+	data := collectData(&cameras)
+
+	dataToServer := sendDataToServer(data)
+
+	if dataToServer == "" {
+		fmt.Println("Nothin to send, empty request")
+	}
+}
+
+func collectData(cameras *[]camera.Camera) map[int]string {
 	data := map[int]string{}
 	photoID := 1
-	for _, zooCamera := range camerasList {
+	for _, zooCamera := range *cameras {
 		photoData := ""
-		// Check if camera is instance of ID interface
-		if IDCamera, ok := zooCamera.(ID); ok {
-			photoData += fmt.Sprintf("Camera ID: %d, ", IDCamera.GetId())
+		// Check if camera is instance of IDer interface
+		if сameraID, ok := zooCamera.(IDer); ok {
+			photoData += fmt.Sprintf("Camera ID: %d, ", сameraID.ID())
 		}
 
 		photo := zooCamera.TakePhoto()
 		photoData += photo.Body
 
-		if metadataCamera, ok := zooCamera.(Metadata); ok {
-			photoData += fmt.Sprintf(", Metadata:  %s", metadataCamera.GetMetaData())
+		if metadataCamera, ok := zooCamera.(Metadater); ok {
+			photoData += fmt.Sprintf(", Metadata:  %s", metadataCamera.MetaData())
 		} else if photoData != "" {
 			photoData += fmt.Sprintf(", Metadata is empty")
 		}
@@ -41,47 +51,39 @@ func main() {
 		}
 	}
 
-	sendDataToServer(data)
+	return data
 }
 
-var sendDataToServer = func(data map[int]string) {
+func sendDataToServer(data map[int]string) string {
 	dataToServer := ""
 	for _, v := range data {
 		dataToServer += fmt.Sprintf("{%s}, ", v)
 	}
 
-	if dataToServer == "" {
-		fmt.Println("Sent empty request to server")
-	} else {
+	if dataToServer != "" {
 		fmt.Printf("Sent to server: %s\n", dataToServer)
 	}
+
+	return dataToServer
 }
 
-var buildCamerasList = func() []camera.Camera {
-	camerasList := []camera.Camera{}
+func buildCameras() []camera.Camera {
+	cameras := []camera.Camera{}
 	for i := range [10]int{} {
+		cameraID := i + 1
 		if i%2 == 0 {
-			camerasList = append(
-				camerasList,
-				camera.InfraredCamera{
-					ZooCamera: camera.ZooCamera{
-						ID:             i + 1,
-						CameraLocation: camera.CameraLocation{Latitude: rand.Float64(), Longitude: rand.Float64()},
-					},
-				},
-			)
+			cameras = append(cameras, camera.InfraredCamera{ZooCamera: createZooCamera(cameraID)})
 		} else {
-			camerasList = append(
-				camerasList,
-				camera.FlashCamera{
-					ZooCamera: camera.ZooCamera{
-						ID:             i + 1,
-						CameraLocation: camera.CameraLocation{Latitude: rand.Float64(), Longitude: rand.Float64()},
-					},
-				},
-			)
+			cameras = append(cameras, camera.FlashCamera{ZooCamera: createZooCamera(cameraID)})
 		}
 	}
 
-	return camerasList
+	return cameras
+}
+
+func createZooCamera(id int) camera.ZooCamera {
+	return camera.ZooCamera{
+		Identifier:     id,
+		CameraLocation: camera.CameraLocation{Latitude: rand.Float64(), Longitude: rand.Float64()},
+	}
 }

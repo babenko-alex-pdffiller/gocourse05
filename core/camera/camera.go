@@ -10,12 +10,12 @@ type Camera interface {
 }
 
 type ZooCamera struct {
-	ID int
+	Identifier int
 	CameraLocation
 }
 
-func (zc ZooCamera) GetId() int {
-	return zc.ID
+func (zc ZooCamera) ID() int {
+	return zc.Identifier
 }
 
 func (zc ZooCamera) TakePhoto() Photo {
@@ -28,7 +28,7 @@ type InfraredCamera struct {
 
 func (ic InfraredCamera) TakePhoto() Photo {
 	return Photo{
-		Body: fmt.Sprintf("Infrared Photo #%.3d", ic.ID),
+		Body: fmt.Sprintf("Infrared Photo #%.3d", ic.ID()),
 		Time: time.Now(),
 		Location: CameraLocation{
 			Latitude:  ic.Latitude,
@@ -37,7 +37,7 @@ func (ic InfraredCamera) TakePhoto() Photo {
 	}
 }
 
-func (ic InfraredCamera) GetMetaData() string {
+func (ic InfraredCamera) Metadater() string {
 	return fmt.Sprintf("%s: %g, %g", "Infrared", ic.Latitude, ic.Longitude)
 }
 
@@ -47,7 +47,7 @@ type FlashCamera struct {
 
 func (fc FlashCamera) TakePhoto() Photo {
 	return Photo{
-		Body: fmt.Sprintf("Photo with Flash #%.3d", fc.ID),
+		Body: fmt.Sprintf("Photo with Flash #%.3d", fc.ID()),
 		Time: time.Now(),
 		Location: CameraLocation{
 			Latitude:  fc.Latitude,

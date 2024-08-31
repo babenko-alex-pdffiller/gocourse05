@@ -1,59 +1,51 @@
 package main
 
 import (
-	"fmt"
 	"gocourse05/core/camera"
-	"strings"
 	"testing"
 )
 
-var lastSentData string
-
-func mockSendDataToServer(data map[int]string) {
-	dataToServer := ""
-	for _, v := range data {
-		dataToServer += fmt.Sprintf("{%s}, ", v)
-	}
-
-	lastSentData = dataToServer
-}
-
-func TestMainFunctionSuccessful(t *testing.T) {
+func TestCollectData(t *testing.T) {
 	// Arrange
-	lastSentData = ""
-	originalSendDataToServer := sendDataToServer
-	sendDataToServer = mockSendDataToServer
-	defer func() { sendDataToServer = originalSendDataToServer }()
-
-	/// Act
-	main()
+	cameras := []camera.Camera{
+		camera.InfraredCamera{
+			ZooCamera: camera.ZooCamera{
+				Identifier:     10,
+				CameraLocation: camera.CameraLocation{Latitude: 0.1, Longitude: 0.1},
+			},
+		},
+		camera.FlashCamera{
+			ZooCamera: camera.ZooCamera{
+				Identifier:     11,
+				CameraLocation: camera.CameraLocation{Latitude: 0.1, Longitude: 0.1},
+			},
+		},
+	}
+	// Act
+	data := collectData(&cameras)
 	// Assert
-	if lastSentData == "" {
-		t.Error("Expected data to be sent to the server, but got empty string")
+	if len(data) != 2 {
+		t.Errorf("Expected 2 cameras, got %d", len(data))
 	}
-
-	if !strings.Contains(lastSentData, "Camera ID: 1") || !strings.Contains(lastSentData, "Camera ID: 2") {
-		t.Error("Expected data to contain camera IDs 1 and 2, but it was not found")
+	if data[1] != "Camera ID: 10, Infrared Photo #010, Metadata is empty" {
+		t.Errorf("Unexpected data in first item, got %s", data[1])
+	}
+	if data[2] != "Camera ID: 11, Photo with Flash #011, Metadata is empty" {
+		t.Errorf("Unexpected data in second item, got %s", data[2])
 	}
 }
 
-func mockBuildCamerasList() []camera.Camera {
-	camerasList := []camera.Camera{}
-
-	return camerasList
-}
-
-func TestMainFunctionWithUnexpectedFormat(t *testing.T) {
+func TestSendDataToServer(t *testing.T) {
 	// Arrange
-	originalBuildCamerasList := buildCamerasList
-	buildCamerasList = mockBuildCamerasList
-	defer func() {
-		buildCamerasList = originalBuildCamerasList
-		if r := recover(); r != nil {
-			t.Errorf("Main function panicked with: %v", r)
-		}
-	}()
-
-	/// Act
-	main()
+	data := map[int]string{
+		1: "Camera ID: 10, Infrared Photo #010, Metadata is empty",
+		2: "Camera ID: 11, Photo with Flash #011, Metadata is empty",
+	}
+	expectedData := "{Camera ID: 10, Infrared Photo #010, Metadata is empty}, {Camera ID: 11, Photo with Flash #011, Metadata is empty}, "
+	// Act
+	dataToServer := sendDataToServer(data)
+	// Assert
+	if dataToServer != expectedData {
+		t.Errorf("Unexpected data, got %s", dataToServer)
+	}
 }
