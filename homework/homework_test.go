@@ -1,7 +1,7 @@
 package main
 
 import (
-	"gocourse05/core/camera"
+	"gocourse05/pkg/camera"
 	"testing"
 )
 
@@ -22,7 +22,7 @@ func TestCollectData(t *testing.T) {
 		},
 	}
 	// Act
-	data := collectData(&cameras)
+	data := collectData(cameras)
 	// Assert
 	if len(data) != 2 {
 		t.Errorf("Expected 2 cameras, got %d", len(data))

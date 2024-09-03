@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"gocourse05/core/camera"
+	"gocourse05/pkg/camera"
 	"math/rand/v2"
 )
 
@@ -17,7 +17,7 @@ type Metadater interface {
 func main() {
 	cameras := buildCameras()
 
-	data := collectData(&cameras)
+	data := collectData(cameras)
 
 	dataToServer := sendDataToServer(data)
 
@@ -26,14 +26,14 @@ func main() {
 	}
 }
 
-func collectData(cameras *[]camera.Camera) map[int]string {
+func collectData(cameras []camera.Camera) map[int]string {
 	data := map[int]string{}
 	photoID := 1
-	for _, zooCamera := range *cameras {
+	for _, zooCamera := range cameras {
 		photoData := ""
 		// Check if camera is instance of IDer interface
-		if сameraID, ok := zooCamera.(IDer); ok {
-			photoData += fmt.Sprintf("Camera ID: %d, ", сameraID.ID())
+		if cameraID, ok := zooCamera.(IDer); ok {
+			photoData += fmt.Sprintf("Camera ID: %d, ", cameraID.ID())
 		}
 
 		photo := zooCamera.TakePhoto()
@@ -42,7 +42,7 @@ func collectData(cameras *[]camera.Camera) map[int]string {
 		if metadataCamera, ok := zooCamera.(Metadater); ok {
 			photoData += fmt.Sprintf(", Metadata:  %s", metadataCamera.MetaData())
 		} else if photoData != "" {
-			photoData += fmt.Sprintf(", Metadata is empty")
+			photoData += ", Metadata is empty"
 		}
 
 		if photoData != "" {
@@ -69,13 +69,11 @@ func sendDataToServer(data map[int]string) string {
 
 func buildCameras() []camera.Camera {
 	cameras := []camera.Camera{}
-	for i := range [10]int{} {
-		cameraID := i + 1
-		if i%2 == 0 {
-			cameras = append(cameras, camera.InfraredCamera{ZooCamera: createZooCamera(cameraID)})
-		} else {
-			cameras = append(cameras, camera.FlashCamera{ZooCamera: createZooCamera(cameraID)})
-		}
+	for i := range 5 {
+		cameras = append(cameras, camera.InfraredCamera{ZooCamera: createZooCamera(i + 1)})
+	}
+	for i := range 5 {
+		cameras = append(cameras, camera.FlashCamera{ZooCamera: createZooCamera(i + 1)})
 	}
 
 	return cameras
